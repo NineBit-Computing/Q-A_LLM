@@ -1,6 +1,10 @@
+
+
+
 import fitz  # PyMuPDF
 import ollama
 import json
+import time
 import os
 import numpy as np
 from numpy.linalg import norm
@@ -46,11 +50,13 @@ def main():
     """
     filename = "ncert2.pdf"
     paragraphs = parse_pdf(filename)
-
+    start = time.perf_counter()
     embeddings = get_embeddings(filename, "nomic-embed-text", paragraphs)
 
-    prompt = input("What do you want to know? -> ")
-    prompt_embedding = ollama.embeddings(model="nomic-embed-text", prompt=prompt)["embedding"]
+    with open("question.txt", "r") as file:
+        question_text = file.read().strip()
+
+    prompt_embedding = ollama.embeddings(model="nomic-embed-text", prompt=question_text)["embedding"]
     most_similar_chunks = find_most_similar(prompt_embedding, embeddings)[:5]
 
     response = ollama.chat(
@@ -61,10 +67,11 @@ def main():
                 "content": SYSTEM_PROMPT
                 + "\n".join(paragraphs[item[1]] for item in most_similar_chunks),
             },
-            {"role": "user", "content": prompt},
+            {"role": "user", "content": question_text},
         ],
     )
     print("\n\n")
+    print(start)
     print(response["message"]["content"])
 
 if __name__ == "__main__":
