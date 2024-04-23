@@ -140,7 +140,7 @@ async def main(question: Question):
         being as concise as possible. If you're unsure, just say that you don't know.
         Context:
     """
-    pdf_filenames = ["ncert2.pdf", "ncert3.pdf"]  # Add your PDF filenames here
+    pdf_filenames = ["ncert2.pdf", "ncert3.pdf", "Text.pdf"]  # Add your PDF filenames here
     all_paragraphs = []
     all_embeddings = []
 
