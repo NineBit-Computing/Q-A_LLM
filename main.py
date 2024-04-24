@@ -49,14 +49,14 @@ class Question(BaseModel):
     question: str
     embeddings_folder_path: str
 
-pdf_filenames = ["kb/literature/english-12.pdf", "kb/technical/angular-intro.pdf"]  
+pdf_filenames = ["kb/literature/english-12.pdf","kb/literature/bio.pdf", "kb/technical/internet.pdf"]  
 
 all_paragraphs = []
 all_embeddings = []
 for filename in pdf_filenames:
     paragraphs = parse_pdf(filename)
     all_paragraphs.extend(paragraphs)
-    embeddings = get_embeddings(filename, "nomic-embed-text", paragraphs)
+    embeddings = get_embeddings(filename, "mxbai-embed-large", paragraphs)
     all_embeddings.extend(embeddings)
 
 
@@ -73,10 +73,10 @@ async def main(question: Question):
     if all_embeddings is False:
         return {"answer": "No embeddings found in the specified folder."}
     
-    prompt_embedding = ollama.embeddings(model="nomic-embed-text", prompt=prompt)["embedding"]
+    prompt_embedding = ollama.embeddings(model="mxbai-embed-large", prompt=prompt)["embedding"]
     most_similar_chunks = find_most_similar(prompt_embedding, all_embeddings)[:5]
     response = ollama.chat(
-        model="mistral",
+        model="dolphin-phi",
         messages=[
             {
                 "role": "system",
@@ -90,6 +90,6 @@ async def main(question: Question):
     print(response["message"])
     return {"answer": response["message"]}
 
-if __name__ == "main":
+if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
