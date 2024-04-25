@@ -27,6 +27,12 @@ def find_most_similar(prompt_embedding, kb_embedding):
 def generate_chat_response(most_similar_chunks, model_name_for_chat):
     # use the model to generate human friendly response
 
+
+# src_dir -> directory path where the KB is located in local file system
+# document_name -> name of the KB file
+# traget_dir -> directory path where the embedding will be stored
+# model_name -> name of the model to convert document into embeddings
+# this is the starting point
 def generate_embedding(src_dir, document_name, traget_dir, model_name):
     # 
     src_txt_array = create_paragraphs(src_dir, document_name)
