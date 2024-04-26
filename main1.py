@@ -179,7 +179,7 @@ class QuestionBody(BaseModel):
         protected_namespaces = ()
 
 # Generate embeddings before running the FastAPI server
-generate_embedding(src_dir, document_name, target_dir, "mxbai-embed-large")
+# generate_embedding(src_dir, document_name, target_dir, "mxbai-embed-large")
 
 @app.post("/answer/")
 async def handle_question(qPayload: QuestionBody):

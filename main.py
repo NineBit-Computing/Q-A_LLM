@@ -56,7 +56,7 @@ class Question(BaseModel):
     embeddings_folder_path: str
 
 # List of PDF filenames
-pdf_filenames = ["kb/literature/english-12.pdf","kb/literature/bio.pdf", "kb/technical/internet.pdf"]  
+pdf_filenames = ["kb/literature/english-12.pdf","kb/literature/political.pdf","kb/literature/bio.pdf", "kb/technical/internet.pdf"]  
 
 # Lists to store all paragraphs and embeddings from all PDFs
 all_paragraphs = []
@@ -79,12 +79,17 @@ async def main(question: Question):
     """
     prompt = question.question.strip()
     embeddings_folder = question.embeddings_folder_path
+    print(embeddings_folder)
     all_embeddings = load_embeddings(embeddings_folder)
     if all_embeddings is False:
         return {"answer": "No embeddings found in the specified folder."}
     
     prompt_embedding = ollama.embeddings(model="mxbai-embed-large", prompt=prompt)["embedding"]
+    print(prompt_embedding)
+    print("hello")
     most_similar_chunks = find_most_similar(prompt_embedding, all_embeddings)[:5]
+    print(most_similar_chunks)
+    print("Bharat")
     response = ollama.chat(
         model="dolphin-phi",
         messages=[
@@ -104,3 +109,6 @@ async def main(question: Question):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
+
+
